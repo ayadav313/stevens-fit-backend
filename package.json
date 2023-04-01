@@ -1,0 +1,16 @@
+{
+  "name": "stevensfit-backend",
+  "version": "1.0.0",
+  "description": "Backend for *Stevens Fit* Web Application!",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "opencommit": "^1.1.39"
+  }
+}
