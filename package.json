@@ -12,5 +12,9 @@
   "license": "ISC",
   "devDependencies": {
     "opencommit": "^1.1.39"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "mongodb": "^5.1.0"
   }
 }
