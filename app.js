@@ -1,49 +1,15 @@
-import { users } from './config/mongoCollections.js';
-import bcrypt from 'bcrypt';
+// app.js
 
-const addUser = async (user) => {
-  const usersCollection = await users();
+import express from 'express';
+import userRoutes from './routes/users.js';
 
-  // Hash the password
-  const hashedPassword = await bcrypt.hash(user.password, 10);
+const app = express();
 
-  // Construct the user object according to the schema
-  const newUser = {
-    username: user.username,
-    password: hashedPassword,
-    email: user.email,
-    workouts: [],
-    workoutLogs: [],
-  };
+app.use(express.json());
+app.use('/api/users', userRoutes);
 
-  const result = await usersCollection.insertOne(newUser);
-  return true;
-};
-
-const testUser = {
-  username: 'johndoe',
-  password: 'password123',
-  email: 'johndoe@example.com',
-};
-
-addUser(testUser)
-  .then((insertedUser) => {
-    console.log('User added successfully:', insertedUser);
-  })
-  .catch((error) => {
-    console.error('Error adding user:', error);
-  });
-
-const deleteAllUsers = async () => {
-    const usersCollection = await users();
-    const result = await usersCollection.deleteMany({});
-    return result.deletedCount;
-};
-
-deleteAllUsers()
-.then((deletedCount) => {
-    console.log(`Deleted ${deletedCount} users.`);
-})
-.catch((error) => {
-    console.error('Error deleting users:', error);
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server is running at http://localhost:${port}`);
 });
+
