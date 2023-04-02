@@ -65,7 +65,9 @@ const updateUser = async (userId, updatedUser) => {
 };
 
 const getAllUsers = async () => {
-  // Implement logic to retrieve all users here
+  const usersCollection = await users();
+  const allUsers = await usersCollection.find().toArray();
+  return allUsers;
 };
 
 export {
