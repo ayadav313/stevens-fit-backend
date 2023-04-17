@@ -1,5 +1,10 @@
 Backend for *Stevens Fit* Web Application!
 
+## Swagger Docs
+You can use Swagger Docs to learn about and test the API. Swagger provides a user interface for API documentation called Swagger UI, which can be accessed through a web browser.
+
+To access Swagger Docs for Stevens Fit API, go to [localhost:3000/api-docs/](http://localhost:3000/api-docs/). 
+
 ## Installation
 ```
 git clone https://github.com/ayadav313/stevens-fit-backend.git
@@ -18,6 +23,7 @@ npm run seed
 npm run dev
 ```
 The application will start at http://localhost:3000 and will automatically reload when changes are made to the code.
+
 ## Test MongoConnection
 ```
 npm run test:mongo
