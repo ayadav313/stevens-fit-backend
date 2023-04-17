@@ -1,4 +1,9 @@
-// routes/users.js
+/**
+ * @swagger
+ * tags:
+ *   - name: Users
+ *     description: API for managing users
+ */
 
 import express from 'express';
 import validator from 'validator';
@@ -15,6 +20,32 @@ import {
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * /user:
+ *   post:
+ *     summary: Creates a new user
+ *     tags:
+ *       - Users
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Created
+ *       400:
+ *         description: Bad request
+ */
 router.post('/', async (req, res) => {
     try {
         const { username, password, email } = req.body;
@@ -35,6 +66,28 @@ router.post('/', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /user/{id}:
+ *   delete:
+ *     summary: Delete a user by ID
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The user ID
+ *     responses:
+ *       200:
+ *         description: User deleted successfully
+ *       400:
+ *         description: Invalid user ID
+ *       500:
+ *         description: Server error
+ */
 router.delete('/:id', async (req, res) => {
     try {
       const { id } = req.params;
@@ -50,19 +103,97 @@ router.delete('/:id', async (req, res) => {
     }
   });
 
+  /**
+ * @swagger
+ * /user:
+ *   get:
+ *     summary: Get all users
+ *     tags:
+ *       - Users
+ *     responses:
+ *       200:
+ *         description: A list of users
+ */
 router.get('/', async (req, res) => {
   // Implement the route to get all users
   res.json("hi");
 });
 
+/**
+ * @swagger
+ * /user/{id}:
+ *   get:
+ *     summary: Get a user by ID
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The user ID
+ *     responses:
+ *       200:
+ *         description: A user object
+ */
 router.get('/:id', async (req, res) => {
   // Implement the route to get a user by ID
 });
 
+/**
+ * @swagger
+ * /user/username/{username}:
+ *   get:
+ *     summary: Get a user by username
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - in: path
+ *         name: username
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The user's username
+ *     responses:
+ *       200:
+ *         description: A user object
+ */
 router.get('/username/:username', async (req, res) => {
   // Implement the route to get a user by username
 });
 
+/**
+ * @swagger
+ * /user/{id}:
+ *   put:
+ *     summary: Update a user
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The user ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Updated user object
+ */
 router.put('/:id', async (req, res) => {
   // Implement the route to update a user
 });
