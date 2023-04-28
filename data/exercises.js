@@ -113,6 +113,27 @@ async create(name, target, bodyPart, equipment, gifUrl) {
     const exerciseList = await exercisesCollection.find().toArray();
     return exerciseList;
   },
+
+  //retrieves a list of exercises that fit the provided arguments
+  //arguments that are given a null or invalid value are ignored
+  //calling this function with no arguments is equivalent to getAll()
+  async filterBy(name, bodyPart, equipment, target){
+    let searchObj = {};
+    let parameterNames = ["name", "bodyPart", "equipment", "target"];
+    let parameters = [name, bodyPart, equipment, target];
+    for(let i = 0; i < parameters.length; i++){
+      const current = parameters[i];
+      //skip current parameter if parameter is empty or not a string
+      if(validator.isEmpty(current) || !validator.isString(current)){
+        continue;
+      }
+      //add to search object
+      searchObj[parameterNames[i]] = current;
+    }
+    const exercisesCollection = await exercises();
+    const excerciseList = await exercisesCollection.find(searchObj).toArray();
+    return excerciseList;
+  }
   
 };
 
