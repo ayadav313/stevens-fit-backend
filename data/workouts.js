@@ -54,7 +54,6 @@ async create(name, creator, exercises){
     if(result.insertedCount === 0){
         throw new Error("Failed to add workout");
     }
-    
 
 },
 //validates an exercise object
@@ -82,7 +81,74 @@ validateExercise(exercise){
     if(!validator.isInt(exercise.reps) || exercise.reps < 1){
         throw new Error("Invalid Exercise Object: Invalid rep number.");
     }
+},
+//returns a workout by id
+async get(id){
+    if(!validator.isMongoId(id)){
+        throw new Error("Invalid workout ID.");
+    }
+    const workoutsCollection = await workouts();
+    const workout = await workoutsCollection.findOne({_id: ObjectId(id)});
+    if(!workout){
+        throw new Error(`Workout with ID ${id} not found.`);
+    }
+    return workout;
+},
+//returns a list of workouts created by the user with the provided userId
+async getByCreator(userId){
+    if(!validator.isMongoId(userId)){
+        throw new Error("Invalid user ID.");
+    }
+    const workoutsCollection = await workouts();
+    const workouts = await workoutsCollection.find({creator: ObjectId(id)}).toArray();
+    return workouts;
+},
+async getAll() {
+    const workoutsCollection = await workouts();
+    const workouts = await workoutsCollection.find().toArray();
+    return workouts;
+},
+//gets a list of workouts that match the provided name
+//empty string is a valid search term that just returns all existing workouts
+async getByName(name){
+    const workoutsCollection = await workouts();
+    const workouts = await workoutsCollection.find({name: name}).toArray();
+    return workouts;
+},
+//gets a list of workouts that contain all workouts specified in list
+//exercises is a list of Ids
+async filterByExercise(exercises){
+    const workoutList = await this.getAll();
+    for(let i = 0; i < exercises.length; i++){
+        if(!validator.isMongoId(exercises[i])){
+            throw new Error("Invalid exercise ID.");
+        }
+    }
+    const matchingWorkouts = [];
+    for(let i = 0; i < workoutList.length; i++){
+        const currentWorkout = workoutList[i];
+        const currentWorkoutList = [];
+
+        //getting the list of workout IDs
+        for(let x = 0; x < currentWorkout.exercises.length; x++){
+            currentWorkoutList.push(currentWorkout.exercises.exerciseId);
+        }
+        
+        let containsAll = true;
+        //checking to see if each exercise is in the workout
+        for(let x = 0; x < exercises.length; x++){
+            if(!currentWorkoutList.includes(exercises[i])){
+                containsAll = false;
+                break;
+            }
+        }
+        if(containsAll){
+            matchingWorkouts.push(currentWorkout);
+        }
+    }
+    return matchingWorkouts;
 }
+
 
 }
 
