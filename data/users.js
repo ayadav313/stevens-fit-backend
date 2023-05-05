@@ -53,15 +53,61 @@ const deleteUser = async (userId) => {
 
 
 const getUserById = async (userId) => {
-  // Implement logic to retrieve a user by ID here
+  if(!validator.isMongoId(userId)){
+    throw new Error("Invalid user ID");
+  }
+  const usersCollection = await users();
+  const user = await usersCollection.findOne({_id: new ObjectId(userId)});
+  if(!user){
+    throw new Error("User with ID " + userId + " does not exist");
+  }
+  //constructing output object
+  const output = {
+    username: user.username,
+    email: user.email,
+    workouts: user.workouts,
+    workoutLogs: user.workoutLogs
+  };
+  return output;
 };
 
 const getUserByUsername = async (username) => {
-  // Implement logic to retrieve a user by username here
+  //checking if usernameis valid
+  if(!validator.isAlphanumeric(username) || validator.isEmpty(username)){
+    throw new Error("Invalid username");
+  }
+  const usersCollection = await users();
+  const user = await usersCollection.findOne({username: username});
+  if(!user){ //if user does not exist
+    throw new Error("User with username " + username + " does not exist");
+  }
+  //constructing output object
+  const output = {
+    username: user.username,
+    email: user.email,
+    workouts: user.workouts,
+    workoutLogs: user.workoutLogs
+  };
+  return output;
 };
 
 const updateUser = async (userId, updatedUser) => {
-  // Implement user update logic here
+  if(!validator.isMongoId(userId)){
+    throw new Error("Invalid user ID");
+  }
+  if(!isUser(updatedUser)){ //probably should write something to validate if the parameter is a user-type object
+    throw new Error("Invalid user object provided");
+  }
+
+  const usersCollection = await users();
+  const response = await usersCollection.updateOne(
+    {_id: new ObjectId(userId)},
+    {$set: updatedUser}
+  );
+
+  if(!response.acknowledged){
+    throw new Error("Failed to update user");
+  }
 };
 
 const getAllUsers = async () => {
@@ -69,6 +115,11 @@ const getAllUsers = async () => {
   const allUsers = await usersCollection.find().toArray();
   return allUsers;
 };
+
+//TODO: Implement this
+const isUser = (user) => { 
+  return true;
+}
 
 export {
   createUser,

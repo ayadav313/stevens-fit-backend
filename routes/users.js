@@ -138,7 +138,17 @@ router.get('/', async (req, res) => {
  *         description: A user object
  */
 router.get('/:id', async (req, res) => {
-  // Implement the route to get a user by ID
+  try{
+    const id = req.params.id;
+    if(!validator.isMongoId(id)){
+      return res.status(400).json({message: "Invalid user ID"});
+    }
+    const user = await getUserById(id);
+    res.status(200).json(user);
+  }
+  catch(e){
+    res.status(500).json({message: e.message})
+  }
 });
 
 /**
@@ -160,7 +170,17 @@ router.get('/:id', async (req, res) => {
  *         description: A user object
  */
 router.get('/username/:username', async (req, res) => {
-  // Implement the route to get a user by username
+  try{
+    const username = req.params.username;
+    if(!validator.isAlphanumeric(username) || validator.isEmpty(username)){
+      return res.status(400).json({message: "Invalid username"});
+    }
+    const user = await getUserByUsername(username);
+    res.status(200).json(user);
+  }
+  catch(e){
+    res.status(500).json({message: e.message})
+  }
 });
 
 /**
@@ -195,7 +215,19 @@ router.get('/username/:username', async (req, res) => {
  *         description: Updated user object
  */
 router.put('/:id', async (req, res) => {
-  // Implement the route to update a user
+  try{
+    const id = req.params.id;
+    const user = req.body.user;
+    if(!validator.isMongoId(id)){
+      return res.status(400).json({message: "Invalid user ID"});
+    }
+    await updateUser(id, user);
+    res.status(200).json({message: "User updated successfully"});
+  }
+  catch(e){
+    res.status(500).json({message: e.message});
+  }
+
 });
 
 
