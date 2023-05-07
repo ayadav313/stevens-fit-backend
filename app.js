@@ -1,6 +1,6 @@
 import express from 'express';
-import userRoutes from './routes/users.js';
 import swaggerMiddleware from './swagger.js';
+import configRoutes from './routes/index.js';
 
 const app = express();
 
@@ -11,7 +11,9 @@ swaggerMiddleware(app);
 app.use(express.json());
 
 // Mount userRoutes middleware on /api/users route
-app.use('/api/users', userRoutes);
+//app.use('/api/users', userRoutes);
+
+configRoutes(app);
 
 // Start the server
 const port = process.env.PORT || 3000;
