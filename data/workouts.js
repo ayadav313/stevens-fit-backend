@@ -7,13 +7,13 @@ import {ObjectId} from 'mongodb';
 //     "_id": ObjectId, Id of workout
 //     "name": String,
 //     "creator": ObjectId, Id of user who created workout
-//     "exercises": List of exercise objects
+//     "exercises": List of exercise objects[
 //     {
 //          "exerciseId": ObjectId Id of workout, from exercises collection
 //          "sets": Number,
 //          "reps": Number,
 //          "additionalDetails": String,
-//      }
+//      }]
 // }
 
 const workoutMethods = {
@@ -124,6 +124,7 @@ async filterByExercise(exercises){
             throw new Error("Invalid exercise ID.");
         }
     }
+    
     const matchingWorkouts = [];
     for(let i = 0; i < workoutList.length; i++){
         const currentWorkout = workoutList[i];
