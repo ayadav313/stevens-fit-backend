@@ -117,7 +117,7 @@ async getByName(name){
 },
 //gets a list of workouts that contain all workouts specified in list
 //exercises is a list of Ids
-async filterByExercise(exercises){
+async filterByContainedExercises(exercises){
     const workoutList = await this.getAll();
     for(let i = 0; i < exercises.length; i++){
         if(!validator.isMongoId(exercises[i])){

@@ -131,7 +131,7 @@ router.get('/:id', async (req, res) => {
  * @swagger
  * /workouts/creator/{creatorID}:
  *   get:
- *     summary: Get a list of exercises by body part
+ *     summary: Get a list of exercises by creator
  *     tags:
  *       - Workouts
  *     parameters:
@@ -141,7 +141,7 @@ router.get('/:id', async (req, res) => {
  *         schema:
  *           type: string
  *           example: 612db8f48a7c18bf22004b0a
- *         description: The body part for which to get exercises
+ *         description: The ID of the creator for which to get exercises
  *     responses:
  *       200:
  *         description: An array of workout objects
@@ -185,6 +185,190 @@ router.get('/creator/:creatorID', async (req, res) => {
   try {
     const workoutsList = await workoutMethods.getByCreator(req.params.creatorID);
     res.json(workoutsList);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+});
+
+/**
+ * @swagger
+ * /workouts:
+ *   get:
+ *     summary: Returns a list of all existing workouts
+ *     tags:
+ *       - Workouts 
+ *     responses:
+ *       200:
+ *         description: An array of workout objects
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                     example: 612db8f48a7c18bf22004b0a
+ *                   name:
+ *                     type: string
+ *                     example: Full Body Strength Training
+ *                   creator:
+ *                     type: string
+ *                     example: 612db8f48a7c18bf22004b0a
+ *                   exerciseLogs:
+ *                     type: array
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         exerciseId: 
+ *                           type: string
+ *                           example: 612db8f48a7c18bf22004b0a
+ *                         sets:
+ *                           type: number
+ *                           example: 3
+ *                         reps:
+ *                           type: number
+ *                           example: 8
+ *                         additionalDetails:
+ *                           type: string
+ *                           example: "Rest two minutes between sets"
+ *       404:
+ *         description: No workouts found
+ */
+router.get('/all', async (req, res) => {
+  try{
+    const workoutsList = await workoutMethods.getAll();
+    res.json(workoutsList);
+  }
+  catch(error){
+    res.status(404).json({messaeg: error.message});
+  }
+})
+
+/**
+ * @swagger
+ * /workouts/name/{name}:
+ *   get:
+ *     summary: Get a list of exercises by name
+ *     tags:
+ *       - Workouts
+ *     parameters:
+ *       - in: path
+ *         name: name
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: 612db8f48a7c18bf22004b0a
+ *         description: The name for which to get exercises
+ *     responses:
+ *       200:
+ *         description: An array of workout objects
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                     example: 612db8f48a7c18bf22004b0a
+ *                   name:
+ *                     type: string
+ *                     example: Full Body Strength Training
+ *                   creator:
+ *                     type: string
+ *                     example: 612db8f48a7c18bf22004b0a
+ *                   exerciseLogs:
+ *                     type: array
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         exerciseId: 
+ *                           type: string
+ *                           example: 612db8f48a7c18bf22004b0a
+ *                         sets:
+ *                           type: number
+ *                           example: 3
+ *                         reps:
+ *                           type: number
+ *                           example: 8
+ *                         additionalDetails:
+ *                           type: string
+ *                           example: "Rest two minutes between sets"
+ *       404:
+ *         description: No workouts found
+ */
+router.get('/name/:name', async (req, res) => {
+  try {
+    const workoutsList = await workoutMethods.getByName(req.params.name);
+    res.json(workoutsList);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+});
+
+/**
+ * @swagger
+ * /workouts/filter:
+ *   get:
+ *     summary: Get a list of workouts that contain all the specified workouts
+ *     tags:
+ *       - Workouts
+ *     parameters:
+ *       - in: path
+ *         name: exerciseIDs
+ *         required: true
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ *         description: A string representation of the list of IDs to filter workouts with
+ *     responses:
+ *       200:
+ *         description: An array of workout objects
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                     example: 612db8f48a7c18bf22004b0a
+ *                   name:
+ *                     type: string
+ *                     example: Full Body Strength Training
+ *                   creator:
+ *                     type: string
+ *                     example: 612db8f48a7c18bf22004b0a
+ *                   exerciseLogs:
+ *                     type: array
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         exerciseId: 
+ *                           type: string
+ *                           example: 612db8f48a7c18bf22004b0a
+ *                         sets:
+ *                           type: number
+ *                           example: 3
+ *                         reps:
+ *                           type: number
+ *                           example: 8
+ *                         additionalDetails:
+ *                           type: string
+ *                           example: "Rest two minutes between sets"
+ *       404:
+ *         description: No workouts found
+ */
+router.get('/filter/:exerciseIDs', async (req, res) => {
+  try {
+    const exerciseIDs = JSON.parse(req.params.exerciseIDs);
+    const workoutsList = await workoutMethods.filterByContainedExercises(exerciseIDs);
+    res.status(201).json(workoutsList);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
