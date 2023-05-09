@@ -39,6 +39,25 @@ const createUser = async (username, password, email) => {
     return true;
 };
 
+//checks the validity of a username-password combination
+const checkUser = async (username, password) => {
+  if(!validator.isAlphanumeric(username) || validator.isEmpty(username)){
+    throw new Error("Invalid username");
+  }
+  if(validator.isEmpty(password)){
+    throw new Error("Invalid password");
+  }
+  const possibleUsers = await users.find({emailAddress: emailAddress}).toArray();
+  if(!possibleUsers || possibleUsers.length < 1){
+    throw new Error("User not found");
+  }
+  const user = possibleUsers[0];
+  const isValid = await bcrypt.compare(password, user.password);
+  if(!isValid){
+    throw new Error("Incorrect password");
+  }
+}
+
 const deleteUser = async (userId) => {
     // Validate input
     if (!validator.isMongoId(userId)) { throw new Error('Invalid user ID'); }
@@ -139,4 +158,5 @@ export {
   updateUser,
   deleteUser,
   getAllUsers,
+  checkUser
 };
