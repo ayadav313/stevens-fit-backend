@@ -117,17 +117,38 @@ const getAllUsers = async () => {
 };
 
 
-const isUser = (user) => { 
+
+const isUser = (user) => {
+
+  //checking user exists and is of correct type 
+  if (!user) return false;
   if (typeof user !== 'object') return false;
+
+  //checking username
+  if(!user.username) return false;
   if (validator.isEmpty(user.username) || !validator.isAlphanumeric(user.username)) return false;
+
+  //checking password
+  if(!user.password) return false;
   if (validator.isEmpty(user.password)) return false;
+  
+  //checking email
+  if(!user.email) return false;
   if (!validator.isEmail(user.email)) return false;
+
+  //check workouts array for type and element validity
   if (!Array.isArray(user.workouts) || !Array.isArray(user.workoutLogs)) return false;
-  for (i of user.workouts){
-    if (!validator.isMongoId(i)) return false;
+  if (user.workouts.length !== 0) {
+      for (i of user.workouts){
+          if (!validator.isMongoId(i)) return false;
+      }
   }
-  for (i of user.workoutLogs){
-    if (!validator.isMongoId(i)) return false;
+  
+  //check workoutLogs array for type and element validity
+  if (user.workoutLogs.length !== 0){
+      for (i of user.workoutLogs){
+        if (!validator.isMongoId(i)) return false;
+      }
   }
   return true;
 }
