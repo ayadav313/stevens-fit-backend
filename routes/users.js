@@ -68,7 +68,7 @@ router.post('/', async (req, res) => {
 
 /**
  * @swagger
- * /user/{id}:
+ * /user/{id}: 
  *   delete:
  *     summary: Delete a user by ID
  *     tags:
@@ -235,6 +235,78 @@ router.put('/:id', async (req, res) => {
     res.status(500).json({message: e.message});
   }
 
+});
+
+/**
+ * @swagger
+ * /user/check/username:
+ *   post:
+ *     summary: Checks if username-password pair is valid (password should be sent already hashed)
+ *     tags:
+ *       - Users
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: username-password pair is valid
+ *       400:
+ *         description: Bad request/invalid
+ */
+router.post('/check/username', async(req, res) => {
+  const body = req.body;
+
+  try{
+    await users.checkUserByUsername(body.username, body.password);
+    res.status(201).json({message: "Username Password pair is valid"});
+  }
+  catch(e){
+    res.status(400).json({message: e.message});
+  }
+});
+
+/**
+ * @swagger
+ * /user/check/email:
+ *   post:
+ *     summary: Checks if email-password pair is valid (password should be sent already hashed)
+ *     tags:
+ *       - Users
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: username-password pair is valid
+ *       400:
+ *         description: Bad request/invalid
+ */
+router.post('/check/email', async(req, res) => {
+  const body = req.body;
+
+  try{
+    await users.checkUserByEmail(body.email, body.password);
+    res.status(201).json({message: "Email Password pair is valid"});
+  }
+  catch(e){
+    res.status(400).json({message: e.message});
+  }
 });
 
 
