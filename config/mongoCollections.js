@@ -27,5 +27,6 @@ const getCollectionFn = (collection) => {
 export const users = getCollectionFn('users');
 export const exercises = getCollectionFn('exercises');
 export const workouts = getCollectionFn('workouts');
+export const workoutLogs = getCollectionFn('workoutLogs');
 
 
