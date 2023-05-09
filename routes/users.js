@@ -114,9 +114,16 @@ router.delete('/:id', async (req, res) => {
  *       200:
  *         description: A list of users
  */
+
 router.get('/', async (req, res) => {
   // Implement the route to get all users
-  res.json("hi");
+  try{
+    const users = await getAllUsers();
+    res.status(200).json(users);
+  }
+  catch(e){
+    res.status(500).json({message: e.message})
+  }
 });
 
 /**

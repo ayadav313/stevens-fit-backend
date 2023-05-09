@@ -116,8 +116,19 @@ const getAllUsers = async () => {
   return allUsers;
 };
 
-//TODO: Implement this
+
 const isUser = (user) => { 
+  if (typeof user !== 'object') return false;
+  if (validator.isEmpty(user.username) || !validator.isAlphanumeric(user.username)) return false;
+  if (validator.isEmpty(user.password)) return false;
+  if (!validator.isEmail(user.email)) return false;
+  if (!Array.isArray(user.workouts) || !Array.isArray(user.workoutLogs)) return false;
+  for (i of user.workouts){
+    if (!validator.isMongoId(i)) return false;
+  }
+  for (i of user.workoutLogs){
+    if (!validator.isMongoId(i)) return false;
+  }
   return true;
 }
 
