@@ -40,14 +40,33 @@ const createUser = async (username, password, email) => {
 };
 
 //checks the validity of a username-password combination
-const checkUser = async (username, password) => {
+const checkUserByUsername = async (username, password) => {
   if(!validator.isAlphanumeric(username) || validator.isEmpty(username)){
     throw new Error("Invalid username");
   }
   if(validator.isEmpty(password)){
     throw new Error("Invalid password");
   }
-  const possibleUsers = await users.find({emailAddress: emailAddress}).toArray();
+  const possibleUsers = await users.find({username: username}).toArray();
+  if(!possibleUsers || possibleUsers.length < 1){
+    throw new Error("User not found");
+  }
+  const user = possibleUsers[0];
+  const isValid = await bcrypt.compare(password, user.password);
+  if(!isValid){
+    throw new Error("Incorrect password");
+  }
+}
+
+//checks the validity of a email-password combination
+const checkUserByEmail = async (email, password) => {
+  if(validator.isEmail(email)){
+    throw new Error("Invalid email");
+  }
+  if(validator.isEmpty(password)){
+    throw new Error("Invalid password");
+  }
+  const possibleUsers = await users.find({email: email}).toArray();
   if(!possibleUsers || possibleUsers.length < 1){
     throw new Error("User not found");
   }
@@ -158,5 +177,6 @@ export {
   updateUser,
   deleteUser,
   getAllUsers,
-  checkUser
+  checkUserByUsername,
+  checkUserByEmail
 };
