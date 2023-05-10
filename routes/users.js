@@ -16,6 +16,7 @@ import {
   updateUser,
   deleteUser,
   getAllUsers,
+  checkUserByEmail,
 } from '../data/users.js';
 
 const router = express.Router();
@@ -301,7 +302,8 @@ router.post('/check/email', async(req, res) => {
   const body = req.body;
 
   try{
-    await users.checkUserByEmail(body.email, body.password);
+    const user = await checkUserByEmail(body.email, body.password);
+    req.session.user = user;
     res.status(201).json({message: "Email Password pair is valid"});
   }
   catch(e){
