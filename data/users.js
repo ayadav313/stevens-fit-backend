@@ -30,6 +30,7 @@ const createUser = async (username, password, email) => {
         email: email,
         workouts: [],
         workoutLogs: [],
+        friends: []
     };
 
     const result = await usersCollection.insertOne(newUser);
@@ -150,7 +151,95 @@ const updateUser = async (userId, updatedUser) => {
   if(!response.acknowledged){
     throw new Error("Failed to update user");
   }
+
 };
+
+
+//addFriend - adds a friend userId to the friends array
+const addFriend = async (id, friendId) => {
+
+  try {
+
+      id = isValidId(id);
+      friendId = isValidId(friendId);
+
+  }
+  catch(e){
+      throw new Error('Error: users: addFriend: ' + e);
+  }
+
+  try{
+      const user = await getUserById(id);
+
+      user.friends.push(friendId);
+
+      //if doesn't work change to delete user.id;
+      delete user._id;
+
+      await update(id, user);
+
+      return user;
+  }
+  catch(e) {
+      throw new Error('Error: users: addFriend: ' + e);
+  }
+}
+
+
+//removeFriend - remove a friend userId from the friends array
+const removeFriend = async (id, friendId) => {
+
+  try {
+
+      id = isValidId(id);
+      friendId = isValidId(friendId);
+
+  }
+  catch(e){
+      throw new Error('Error: users: removeFriend: ' + e);
+  }
+
+  try{
+      const user = await getUserById(id);
+
+      user.friends = user.friends.filter(x => x._id !== friendId);
+
+      //if doesn't work change to delete user.id;
+      delete user._id;
+
+      await update(id, user);
+
+      return user;
+  }
+  catch(e) {
+      throw new Error('Error: users: removeFriend: ' + e);
+  }
+}
+
+
+//getFriends - return array of userIds for friends of user
+const getFriends = async (id) => {
+
+  try {
+
+      id = isValidId(id);
+
+  }
+  catch(e){
+      throw new Error('Error: users: getFriends: ' + e);
+  }
+
+  try{
+      const user = await getUserById(id);
+
+      if(!user.friends) throw new Error('user does not have a friends array');
+
+      return user.friends;
+  }
+  catch(e) {
+      throw new Error('Error: users: getFriends: ' + e);
+  }
+}
 
 const getAllUsers = async () => {
   const usersCollection = await users();
@@ -192,8 +281,33 @@ const isUser = (user) => {
         if (!validator.isMongoId(i)) return false;
       }
   }
+  
+  //check friends array for type and element validity
+  if (user.friends.length !== 0){
+      for (i of user.friends){
+        if (!validator.isMongoId(i)) return false;
+      }
+  }
   return true;
 }
+
+
+//checks to make sure that ObjectIds exist and follow mongoId conventions
+const isValidId = (id) => { 
+
+  if (!id) throw new Error('isValidId: must provide an id');
+
+  if(typeof id !== 'string') throw new Error('isValidId: id must be of type string');
+
+  if (id.trim().length === 0) throw new Error('isValidId: must not provide an empty id string');
+
+  id = id.trim();
+
+  if (!validator.isMongoId(id)) throw new Error('isValidId: must provide a valid id.');
+
+  return id;
+};
+
 
 export {
   createUser,
@@ -203,5 +317,8 @@ export {
   deleteUser,
   getAllUsers,
   checkUserByUsername,
-  checkUserByEmail
+  checkUserByEmail,
+  addFriend,
+  getFriends,
+  removeFriend
 };
