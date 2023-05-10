@@ -19,7 +19,9 @@ import {
   checkUserByEmail,
   addFriend,
   removeFriend,
-  getFriends
+  getFriends,
+  setGymStatus,
+  getGymStatus
 } from '../data/users.js';
 
 const router = express.Router();
@@ -418,6 +420,64 @@ router.get('/friends/:id', async (req, res) => {
   }
   catch(e){
     res.status(500).json({error: 'Error: users route: GET /friends/{id} : ' + e});
+  }
+
+});
+
+
+router.get('/getInGymStatus/:id', async (req, res) => {
+
+  let id = req.params.id;
+
+  try{
+
+    id = isValidId(id);
+
+  }
+  catch(e) {
+    return res.status(400).json({error: 'Error: users route: GET /getInGymStatus/{id} : ' + e});
+  }
+
+  try{
+
+    const result = await getGymStatus(id);
+
+    res.status(200).json({inGym: result});
+
+  }
+  catch(e){
+    res.status(500).json({error: 'Error: users route: GET /getInGymStatus/{id} : ' + e});
+  }
+
+});
+
+
+router.get('/setInGymStatus/:id', async (req, res) => {
+
+  const {inGym} = req.body;
+
+  let id = req.params.id;
+
+  try{
+
+    id = isValidId(id);
+    if(!inGym) throw new Error('must provide inGym param');
+    if(typeof inGym !== 'boolean') throw new Error('inGym must be of type boolean');
+
+  }
+  catch(e) {
+    return res.status(400).json({error: 'Error: users route: GET /setInGymStatus/{id} : ' + e});
+  }
+
+  try{
+
+    const user = await setGymStatus(id, inGym);
+
+    res.status(200).json(user);
+
+  }
+  catch(e){
+    res.status(500).json({error: 'Error: users route: GET /setInGymStatus/{id} : ' + e});
   }
 
 });
