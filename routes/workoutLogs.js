@@ -37,32 +37,6 @@ import {
 
 const router = express.Router();
 
-/**
- * @swagger
- * /workoutLogs:
- *   post:
- *     summary: Creates a new workoutLog
- *     tags:
- *       - workoutLogs
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               userId:
- *                 type: string
- *               workoutId:
- *                 type: string
- *               date:
- *                 type: string
- *     responses:
- *       201:
- *         description: Created
- *       400:
- *         description: Bad request
- */
 
 //route to create a workoutlog - userId, workoutId, date passed through req.body
 router.post('/', async (req, res) => {
@@ -98,28 +72,7 @@ router.post('/', async (req, res) => {
 
 
 
-/**
- * @swagger
- * /workoutLogs/{id}: 
- *   delete:
- *     summary: Delete a workoutLog by ID
- *     tags:
- *       - workoutLogs
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: The workoutLog ID
- *     responses:
- *       200:
- *         description: workoutLog deleted successfully
- *       400:
- *         description: Invalid ID
- *       500:
- *         description: Server error
- */
+
 
 //route to delete a workoutlog - id passed in request
 router.delete('/:id', async (req, res) => {
@@ -148,19 +101,6 @@ router.delete('/:id', async (req, res) => {
     }
   });
 
-  /**
- * @swagger
- * /workoutLogs:
- *   get:
- *     summary: Get all workoutLogs
- *     tags:
- *       - workoutLogs
- *     responses:
- *       200:
- *         description: Array of workoutLogs
- *       500:
- *         description: server error
- */
 
 
 //route to return all workoutlogs
@@ -180,28 +120,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-/**
- * @swagger
- * /workoutLogs/{id}:
- *   get:
- *     summary: Get a workoutLog by ID
- *     tags:
- *       - workoutLogs
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: The workoutLog ID
- *     responses:
- *       200:
- *         description: workoutLogs array object
- *       400:
- *         description: Id is invalid
- *       500:
- *         description: server Error
- */
 
 //route to return all workoutlogs with _id = id - id passed through request
 router.get('/:id', async (req, res) => {
@@ -231,28 +149,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-/**
- * @swagger
- * /workoutLogs/user/{id}:
- *   get:
- *     summary: Get workoutLogs by userId
- *     tags:
- *       - workoutLogs
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: The user's id
- *     responses:
- *       200:
- *         description: workoutLogs array object
- *       400:
- *         description: Id is invalid
- *       500:
- *         description: server Error
- */
+
 
 //route to return all workoutlogs with userId = id - id passed through request
 router.get('/user/:id', async (req, res) => {
@@ -282,28 +179,6 @@ router.get('/user/:id', async (req, res) => {
     }
 });
 
-/**
- * @swagger
- * /workoutLogs/workout/{id}:
- *   get:
- *     summary: Get workoutLogs by workoutId
- *     tags:
- *       - workoutLogs
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: The workout's id
- *     responses:
- *       200:
- *         description: workoutLogs array object
- *       400:
- *         description: Id is invalid
- *       500:
- *         description: server Error
- */
 
 //route to return all workoutlogs with workoutId = id - id passed through request
 router.get('/workout/:id', async (req, res) => {
@@ -333,28 +208,7 @@ router.get('/workout/:id', async (req, res) => {
     }
 });
 
-/**
- * @swagger
- * /workoutLogs/date/{id}:
- *   get:
- *     summary: Get workoutLogs by date
- *     tags:
- *       - workoutLogs
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: The date
- *     responses:
- *       200:
- *         description: workoutLogs array object
- *       400:
- *         description: Id is invalid
- *       500:
- *         description: server Error
- */
+
 
 //route to return all workoutlogs with date = date - date passed through request
 router.get('/date/:date', async (req, res) => {
@@ -385,55 +239,6 @@ router.get('/date/:date', async (req, res) => {
 });
 
 
-/**
- * @swagger
- * /workoutLogs/{id}:
- *   put:
- *     summary: Update a workoutLog
- *     tags:
- *       - workoutLogs
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: The workout ID
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               userId:
- *                 type: string
- *               workoutId:
- *                 type: string
- *               date:
- *                 type: string
- *               exerciseLogs:
- *                 type: Object
- *                 properties:
- *                   exerciseId: 
- *                     type: ObjectId, 
-                     name: 
-                       type: String, 
-                     sets: 
-                       type: Number,
-                     reps: 
-                       type: Number,
-                     notes: 
-                       type: String
- *     responses:
- *       200:
- *         description: workoutLogs array object
- *       400:
- *         description: Id is invalid
- *       500:
- *         description: server Error
- **/
-
 //route to return all workoutlogs filtered by combination of  { userId, workoutId, date } - passed through request body
 router.get('/filter', async (req, res) => {
     
@@ -463,55 +268,6 @@ router.get('/filter', async (req, res) => {
 
     }
 });
-
-/**
- * @swagger
- * /workoutLogs/{id}:
- *   put:
- *     summary: Update a workoutLog
- *     tags:
- *       - workoutLogs
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: The user ID
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               userId:
- *                 type: string
- *               workoutId:
- *                 type: string
- *               date:
- *                 type: string
- *               exerciseLogs:
- *                 type: Object
- *                 properties:
- *                   exerciseId: 
- *                     type: ObjectId, 
-                     name: 
-                       type: String, 
-                     sets: 
-                       type: Number,
-                     reps: 
-                       type: Number,
-                     notes: 
-                       type: String
- *     responses:
- *       200:
- *         description: workoutLogs array object
- *       400:
- *         description: Id is invalid
- *       500:
- *         description: server Error
- */
 
 //updates a workoutlog with id passed through request and { userId, workoutId, date, exerciseLogs } passed through request body
 router.put('/:id', async (req, res) => {
@@ -546,44 +302,6 @@ router.put('/:id', async (req, res) => {
 });
 
 
-/**
- * @swagger
- * /addExercise/{id}:
- *   put:
- *     summary: add exercise to a workoutLog
- *     tags:
- *       - workoutLogs
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: The workoutLog ID
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               exerciseLogs:
- *                 type: Object
- *                 properties:
- *                  exerciseId: ObjectId, 
-                    name: String, 
-                    sets: Number,
-                    reps: Number,
-                    notes: String
- *                
- *     responses:
- *       200:
- *         description: workoutLog object
- *       400:
- *         description: Id is invalid
- *       500:
- *         description: server Error
- */
 //add exercise to workoutlog with id passed through request and exerciselogs passed through request.body
 router.put('/addExercise/:id', async (req, res) => {
     let id = req.params.id;
@@ -613,36 +331,7 @@ router.put('/addExercise/:id', async (req, res) => {
 
 });
 
-/**
- * @swagger
- * /removeExercise/{id}:
- *   put:
- *     summary: remove exercise to a workoutLog
- *     tags:
- *       - workoutLogs
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: The workoutLog ID
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *               exerciseLogs:
- *                 type: Object
- *     responses:
- *       200:
- *         description: workoutLogs object
- *       400:
- *         description: Id is invalid
- *       500:
- *         description: server Error
- */
+
 //remove exercise from workoutlog with id passed through request and exerciselogs passed through request.body
 router.put('/removeExercise/:id', async (req, res) => {
     let id = req.params.id;
