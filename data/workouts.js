@@ -48,7 +48,7 @@ async create(name, creator, exercises){
     const workout = {
         name: name,
         creator: creator,
-        exercises: filteredList
+        exerciseLogs: filteredList
     };
     const workoutsCollection = await workouts();
     const result = await workoutsCollection.insertOne(workout);
