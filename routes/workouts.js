@@ -6,10 +6,10 @@
  */
 
 import express from 'express';
-import workoutMethods from '../data/workouts';
+import workoutMethods from '../data/workouts.js';
 import validator from 'validator';
 
-const router = express.Router();
+const workoutsRouter = express.Router();
 
 /**
  * @swagger
@@ -53,7 +53,7 @@ const router = express.Router();
  *       400:
  *         description: Bad request
  */
-router.post('/', async(req, res) => {
+workoutsRouter.post('/', async(req, res) => {
   try{
     const {name, creator, exercises} = req.body;
     const workout = await workoutMethods.create(name, creator, exercises);
@@ -116,7 +116,7 @@ router.post('/', async(req, res) => {
  *       404:
  *         description: Workout not found
  */
-router.get('/:id', async (req, res) => {
+workoutsRouter.get('/:id', async (req, res) => {
   try{
     const workout = await workoutMethods.get(req.params.id);
     res.json(workout);
@@ -181,7 +181,7 @@ router.get('/:id', async (req, res) => {
  *       404:
  *         description: No workouts found
  */
-router.get('/creator/:creatorID', async (req, res) => {
+workoutsRouter.get('/creator/:creatorID', async (req, res) => {
   try {
     const workoutsList = await workoutMethods.getByCreator(req.params.creatorID);
     res.json(workoutsList);
@@ -236,7 +236,7 @@ router.get('/creator/:creatorID', async (req, res) => {
  *       404:
  *         description: No workouts found
  */
-router.get('/all', async (req, res) => {
+workoutsRouter.get('/all', async (req, res) => {
   try{
     const workoutsList = await workoutMethods.getAll();
     res.json(workoutsList);
@@ -300,7 +300,7 @@ router.get('/all', async (req, res) => {
  *       404:
  *         description: No workouts found
  */
-router.get('/name/:name', async (req, res) => {
+workoutsRouter.get('/name/:name', async (req, res) => {
   try {
     const workoutsList = await workoutMethods.getByName(req.params.name);
     res.json(workoutsList);
@@ -364,7 +364,7 @@ router.get('/name/:name', async (req, res) => {
  *       404:
  *         description: No workouts found
  */
-router.get('/filter/:exerciseIDs', async (req, res) => {
+workoutsRouter.get('/filter/:exerciseIDs', async (req, res) => {
   try {
     const exerciseIDs = JSON.parse(req.params.exerciseIDs);
     const workoutsList = await workoutMethods.filterByContainedExercises(exerciseIDs);
@@ -373,3 +373,5 @@ router.get('/filter/:exerciseIDs', async (req, res) => {
     res.status(404).json({ message: error.message });
   }
 });
+
+export default workoutsRouter;

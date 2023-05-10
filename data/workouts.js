@@ -1,4 +1,4 @@
-import { workouts } from "../config/mongoCollections";
+import { workouts } from "../config/mongoCollections.js";
 import validator from "validator";
 import {ObjectId} from 'mongodb';
 
