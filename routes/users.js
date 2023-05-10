@@ -17,6 +17,9 @@ import {
   deleteUser,
   getAllUsers,
   checkUserByEmail,
+  addFriend,
+  removeFriend,
+  getFriends
 } from '../data/users.js';
 
 const router = express.Router();
@@ -310,5 +313,129 @@ router.post('/check/email', async(req, res) => {
     res.status(400).json({message: e.message});
   }
 });
+
+
+
+//addFriend - adds a friend userId to the friends array
+router.put('/addFriend/:id', async (req, res) => {
+  let id = req.params.id;
+  let { friendId } = req.body;
+
+  try{
+
+      id = isValidId(id);
+      friendId = isValidId(friendId);
+
+  }
+  catch(e){
+
+      return res.status(400).json({error: 'Error: users route: PUT /addFriend/{id} : ' + e});
+
+  }
+
+  try{
+
+      const user = await addFriend(id, friendId);
+      res.status(200).json(user);
+
+  }
+  catch(e){
+      return res.status(500).json({error: 'Error: users route: PUT /addFriend/{id} : ' + e});
+  }
+
+});
+
+
+//removeFriend - remove a friend userId from the friends array
+router.put('/removeExercise/:id', async (req, res) => {
+  let id = req.params.id;
+  let { friendId } = req.body;
+
+  try{
+
+      id = isValidId(id);
+      friendId = isValidId(friendId);
+
+  }
+  catch(e){
+
+      return res.status(400).json({error: 'Error: users route: PUT /removeFriend/{id} : ' + e});
+
+  }
+
+  try{
+
+      const user = await removeFriend(id, friendId);
+      res.status(200).json(user);
+
+  }
+  catch(e){
+      return res.status(500).json({error: 'Error: users route: PUT /removeFriend/{id} : ' + e});
+  }
+
+});
+
+
+/* /user/friends/{id}:
+*   get:
+*     summary: Get a user's friend list by id
+*     tags:
+*       - Users
+*     parameters:
+*       - in: path
+*         name: id
+*         required: true
+*         schema:
+*           type: string
+*         description: The user's id
+*     responses:
+*       200:
+*         description: A userId Array
+*       400:
+          description: request error
+        500:
+          server error
+**/
+router.get('/friends/:id', async (req, res) => {
+
+  let id = req.params.id;
+
+  try{
+
+    id = isValidId(id);
+
+  }
+  catch(e) {
+    return res.status(400).json({error: 'Error: users route: GET /friends/{id} : ' + e});
+  }
+
+  try{
+
+    const list = await getFriends(id);
+
+    res.status(200).json(list);
+
+  }
+  catch(e){
+    res.status(500).json({error: 'Error: users route: GET /friends/{id} : ' + e});
+  }
+
+});
+
+//checks to make sure that ObjectIds exist and follow mongoId conventions
+const isValidId = (id) => { 
+
+    if (!id) throw new Error('isValidId: must provide an id');
+
+    if(typeof id !== 'string') throw new Error('isValidId: id must be of type string');
+
+    if (id.trim().length === 0) throw new Error('isValidId: must not provide an empty id string');
+
+    id = id.trim();
+
+    if (!validator.isMongoId(id)) throw new Error('isValidId: must provide a valid id.');
+
+    return id;
+};
 
 export default router;
