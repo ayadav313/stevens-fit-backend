@@ -1,6 +1,7 @@
 import express from 'express';
 import swaggerMiddleware from './swagger.js';
 import configRoutes from './routes/index.js';
+import cors from 'cors';
 
 const app = express();
 
@@ -9,6 +10,7 @@ swaggerMiddleware(app);
 
 // Configure application to parse JSON data in request bodies
 app.use(express.json());
+app.use(cors());
 
 // Mount userRoutes middleware on /api/users route
 //app.use('/api/users', userRoutes);
