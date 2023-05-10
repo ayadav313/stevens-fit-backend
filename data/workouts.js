@@ -26,7 +26,7 @@ async create(name, creator, exercises){
     if(validator.isEmpty(creator)){
         throw new Error("Invalid creator id.");
     }
-    if(validator.isEmpty(exercises) || !Array.isArray(exercises) || exercises.length < 1){
+    if(!Array.isArray(exercises) || exercises.length < 1){
         throw new Error("Invalid excerise list.");
     }
     
@@ -39,7 +39,7 @@ async create(name, creator, exercises){
         filteredExercise.exerciseId = currentExercise.exerciseId;
         filteredExercise.sets = currentExercise.sets;
         filteredExercise.reps = currentExercise.reps;
-        if(!validator.isEmpty(currentExercise.additionalDetails != null)){
+        if(currentExercise.additionalDetails != null && !validator.isEmpty(currentExercise.additionalDetails)){
             filteredExercise.additionalDetails = currentExercise.additionalDetails;
         }
         filteredList.push(filteredExercise);
@@ -62,7 +62,8 @@ async create(name, creator, exercises){
 //sets: number that is a positive integer
 //reps: number that is a positive integer
 validateExercise(exercise){
-    const keys = exercise.keys();
+
+    const keys = Object.keys(exercise);
     if(!keys.includes("exerciseId")){
         throw new Error("Invalid Exercise Object: does not contain field 'exerciseId'");
     }

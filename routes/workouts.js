@@ -55,12 +55,15 @@ const workoutsRouter = express.Router();
  */
 workoutsRouter.post('/', async(req, res) => {
   try{
-    const {name, creator, exercises} = req.body;
+    const {name, creator, exercises} = req.body.workoutObj;
+    console.log(req.body);
+    console.log(name + " " + creator + " " + exercises);
     const workout = await workoutMethods.create(name, creator, exercises);
     res.status(201).json(workout);
   }
   catch(e){
-    res.status(400).json({message: error.message})
+    console.log("POST /: " + e.message);
+    res.status(400).json({message: e.message})
   }
 });
 
@@ -122,7 +125,8 @@ workoutsRouter.get('/:id', async (req, res) => {
     res.json(workout);
   }
   catch(e){
-    res.status(404).json({message: error.message});
+    console.log(e.message);
+    res.status(404).json({message: e.message});
   }
 
 })
@@ -186,6 +190,7 @@ workoutsRouter.get('/creator/:creatorID', async (req, res) => {
     const workoutsList = await workoutMethods.getByCreator(req.params.creatorID);
     res.json(workoutsList);
   } catch (error) {
+    console.log(error.message);
     res.status(404).json({ message: error.message });
   }
 });
@@ -242,6 +247,18 @@ workoutsRouter.get('/all', async (req, res) => {
     res.json(workoutsList);
   }
   catch(error){
+    console.log(error.message);
+    res.status(404).json({messaeg: error.message});
+  }
+})
+
+workoutsRouter.get('/', async (req, res) => {
+  try{
+    const workoutsList = await workoutMethods.getAll();
+    res.json(workoutsList);
+  }
+  catch(error){
+    console.log(error.message);
     res.status(404).json({messaeg: error.message});
   }
 })
@@ -305,6 +322,7 @@ workoutsRouter.get('/name/:name', async (req, res) => {
     const workoutsList = await workoutMethods.getByName(req.params.name);
     res.json(workoutsList);
   } catch (error) {
+    console.log(error.message);
     res.status(404).json({ message: error.message });
   }
 });
@@ -370,6 +388,7 @@ workoutsRouter.get('/filter/:exerciseIDs', async (req, res) => {
     const workoutsList = await workoutMethods.filterByContainedExercises(exerciseIDs);
     res.status(201).json(workoutsList);
   } catch (error) {
+    console.log(error.message);
     res.status(404).json({ message: error.message });
   }
 });
