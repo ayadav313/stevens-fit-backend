@@ -300,17 +300,15 @@ router.post('/check/username', async(req, res) => {
  */
 router.post('/check/email', async(req, res) => {
   const body = req.body;
-
   try{
     const user = await checkUserByEmail(body.email, body.password);
+    user.password = "";
     req.session.user = user;
-    res.status(201).json({message: "Email Password pair is valid"});
+    res.status(201).json(user);
   }
   catch(e){
     res.status(400).json({message: e.message});
   }
 });
-
-
 
 export default router;

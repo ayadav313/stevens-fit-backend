@@ -56,13 +56,10 @@ const workoutsRouter = express.Router();
 workoutsRouter.post('/', async(req, res) => {
   try{
     const {name, creator, exercises} = req.body.workoutObj;
-    console.log(req.body);
-    console.log(name + " " + creator + " " + exercises);
     const workout = await workoutMethods.create(name, creator, exercises);
     res.status(201).json(workout);
   }
   catch(e){
-    console.log("POST /: " + e.message);
     res.status(400).json({message: e.message})
   }
 });
@@ -244,7 +241,6 @@ workoutsRouter.get('/creator/:creatorID', async (req, res) => {
 workoutsRouter.get('/all', async (req, res) => {
   try{
     const workoutsList = await workoutMethods.getAll();
-    console.log("Made call");
     res.json(workoutsList);
   }
   catch(error){
