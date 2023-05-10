@@ -183,7 +183,8 @@ const getByDate = async (date) => {
     return log;
 }
 
-//filterLogs - get all logs through one or many parameters (userId, workoutId, date)
+//filterLogs - get all logs through one or many parameters (userId, workoutId, date). You can enter 0-3 parameters.
+//0 parameters acts as getAll and each additional parameter will become a constraint
 const filterLogs = async (userId, workoutId, date) => {
     let search_params = {};
     try{
