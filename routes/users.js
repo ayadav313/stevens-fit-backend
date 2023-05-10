@@ -452,7 +452,7 @@ router.get('/getInGymStatus/:id', async (req, res) => {
 });
 
 
-router.get('/setInGymStatus/:id', async (req, res) => {
+router.put('/setInGymStatus/:id', async (req, res) => {
 
   const {inGym} = req.body;
 
