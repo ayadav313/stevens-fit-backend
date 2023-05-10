@@ -90,7 +90,7 @@ async get(id){
         throw new Error("Invalid workout ID.");
     }
     const workoutsCollection = await workouts();
-    const output = await workoutsCollection.findOne({_id: ObjectId(id)});
+    const output = await workoutsCollection.findOne({_id: new ObjectId(id)});
     if(!output){
         throw new Error(`Workout with ID ${id} not found.`);
     }
@@ -102,7 +102,7 @@ async getByCreator(userId){
         throw new Error("Invalid user ID.");
     }
     const workoutsCollection = await workouts();
-    const output = await workoutsCollection.find({creator: ObjectId(id)}).toArray();
+    const output = await workoutsCollection.find({creator: new ObjectId(id)}).toArray();
     return output;
 },
 async getAll() {
