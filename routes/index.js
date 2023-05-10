@@ -2,10 +2,13 @@
 
 import exerciseRoutes from './exercises.js';
 import userRoutes from './users.js';
+import workoutLogsRoutes from './workoutLogs.js';
 
 const constructorMethod = (app) => {
   app.use('/exercises', exerciseRoutes);
   app.use('/users', userRoutes);
+  app.use('/workouts')
+  app.use('/workoutLogs', workoutLogsRoutes);
   app.use('*', (req, res) => {
     res.sendStatus(404);
   });
