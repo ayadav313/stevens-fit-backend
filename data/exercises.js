@@ -62,7 +62,7 @@ async create(name, target, bodyPart, equipment, gifUrl) {
       throw new Error('Invalid exercise ID.');
     }
     const exercisesCollection = await exercises();
-    const exercise = await exercisesCollection.findOne({ _id: ObjectId(id) });
+    const exercise = await exercisesCollection.findOne({ _id: new ObjectId(id) });
     if (!exercise) {
       throw new Error(`Exercise with ID ${id} not found.`);
     }

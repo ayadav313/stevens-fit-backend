@@ -16,6 +16,7 @@ import {ObjectId} from 'mongodb';
 //      }]
 // }
 
+
 const workoutMethods = {
 //creates and adds exercise object
 //additional properties in exercise objects are ignored
@@ -47,7 +48,7 @@ async create(name, creator, exercises){
     const workout = {
         name: name,
         creator: creator,
-        exercises: filteredList
+        exerciseLogs: filteredList
     };
     const workoutsCollection = await workouts();
     const result = await workoutsCollection.insertOne(workout);
@@ -89,11 +90,11 @@ async get(id){
         throw new Error("Invalid workout ID.");
     }
     const workoutsCollection = await workouts();
-    const workout = await workoutsCollection.findOne({_id: ObjectId(id)});
-    if(!workout){
+    const output = await workoutsCollection.findOne({_id: new ObjectId(id)});
+    if(!output){
         throw new Error(`Workout with ID ${id} not found.`);
     }
-    return workout;
+    return output;
 },
 //returns a list of workouts created by the user with the provided userId
 async getByCreator(userId){
@@ -101,20 +102,20 @@ async getByCreator(userId){
         throw new Error("Invalid user ID.");
     }
     const workoutsCollection = await workouts();
-    const workouts = await workoutsCollection.find({creator: ObjectId(id)}).toArray();
-    return workouts;
+    const output = await workoutsCollection.find({creator: new ObjectId(id)}).toArray();
+    return output;
 },
 async getAll() {
     const workoutsCollection = await workouts();
-    const workouts = await workoutsCollection.find().toArray();
-    return workouts;
+    const output = await workoutsCollection.find().toArray();
+    return output;
 },
 //gets a list of workouts that match the provided name
 //empty string is a valid search term that just returns all existing workouts
 async getByName(name){
     const workoutsCollection = await workouts();
-    const workouts = await workoutsCollection.find({name: name}).toArray();
-    return workouts;
+    const output = await workoutsCollection.find({name: name}).toArray();
+    return output;
 },
 //gets a list of workouts that contain all workouts specified in list
 //exercises is a list of Ids

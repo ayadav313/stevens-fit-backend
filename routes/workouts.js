@@ -244,6 +244,7 @@ workoutsRouter.get('/creator/:creatorID', async (req, res) => {
 workoutsRouter.get('/all', async (req, res) => {
   try{
     const workoutsList = await workoutMethods.getAll();
+    console.log("Made call");
     res.json(workoutsList);
   }
   catch(error){

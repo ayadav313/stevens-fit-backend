@@ -2,7 +2,11 @@ import express from 'express';
 import swaggerMiddleware from './swagger.js';
 import configRoutes from './routes/index.js';
 import cors from 'cors';
+<<<<<<< HEAD
 import session from 'express-session';
+=======
+import workoutMethods from './data/workouts.js';
+>>>>>>> 3797839cd237b9efcda9a1ed8a4b9010f4f20975
 
 const app = express();
 
