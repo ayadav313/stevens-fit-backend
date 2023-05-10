@@ -60,21 +60,25 @@ const checkUserByUsername = async (username, password) => {
 
 //checks the validity of a email-password combination
 const checkUserByEmail = async (email, password) => {
-  if(validator.isEmail(email)){
+  if(!validator.isEmail(email)){
     throw new Error("Invalid email");
   }
   if(validator.isEmpty(password)){
     throw new Error("Invalid password");
   }
-  const possibleUsers = await users.find({email: email}).toArray();
+  const usersCollection = await users();
+  const possibleUsers = await usersCollection.find({email: email}).toArray();
   if(!possibleUsers || possibleUsers.length < 1){
     throw new Error("User not found");
   }
   const user = possibleUsers[0];
+
   const isValid = await bcrypt.compare(password, user.password);
   if(!isValid){
     throw new Error("Incorrect password");
   }
+  
+  return user;
 }
 
 const deleteUser = async (userId) => {

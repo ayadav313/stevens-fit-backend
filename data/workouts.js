@@ -1,4 +1,4 @@
-import { workouts } from "../config/mongoCollections";
+import { workouts } from "../config/mongoCollections.js";
 import validator from "validator";
 import {ObjectId} from 'mongodb';
 
@@ -16,6 +16,7 @@ import {ObjectId} from 'mongodb';
 //      }]
 // }
 
+
 const workoutMethods = {
 //creates and adds exercise object
 //additional properties in exercise objects are ignored
@@ -26,7 +27,7 @@ async create(name, creator, exercises){
     if(validator.isEmpty(creator)){
         throw new Error("Invalid creator id.");
     }
-    if(validator.isEmpty(exercises) || !Array.isArray(exercises) || exercises.length < 1){
+    if(!Array.isArray(exercises) || exercises.length < 1){
         throw new Error("Invalid excerise list.");
     }
     
@@ -39,7 +40,7 @@ async create(name, creator, exercises){
         filteredExercise.exerciseId = currentExercise.exerciseId;
         filteredExercise.sets = currentExercise.sets;
         filteredExercise.reps = currentExercise.reps;
-        if(!validator.isEmpty(currentExercise.additionalDetails != null)){
+        if(currentExercise.additionalDetails != null && !validator.isEmpty(currentExercise.additionalDetails)){
             filteredExercise.additionalDetails = currentExercise.additionalDetails;
         }
         filteredList.push(filteredExercise);
@@ -47,7 +48,7 @@ async create(name, creator, exercises){
     const workout = {
         name: name,
         creator: creator,
-        exercises: filteredList
+        exerciseLogs: filteredList
     };
     const workoutsCollection = await workouts();
     const result = await workoutsCollection.insertOne(workout);
@@ -62,7 +63,8 @@ async create(name, creator, exercises){
 //sets: number that is a positive integer
 //reps: number that is a positive integer
 validateExercise(exercise){
-    const keys = exercise.keys();
+
+    const keys = Object.keys(exercise);
     if(!keys.includes("exerciseId")){
         throw new Error("Invalid Exercise Object: does not contain field 'exerciseId'");
     }
@@ -88,11 +90,11 @@ async get(id){
         throw new Error("Invalid workout ID.");
     }
     const workoutsCollection = await workouts();
-    const workout = await workoutsCollection.findOne({_id: ObjectId(id)});
-    if(!workout){
+    const output = await workoutsCollection.findOne({_id: new ObjectId(id)});
+    if(!output){
         throw new Error(`Workout with ID ${id} not found.`);
     }
-    return workout;
+    return output;
 },
 //returns a list of workouts created by the user with the provided userId
 async getByCreator(userId){
@@ -100,20 +102,20 @@ async getByCreator(userId){
         throw new Error("Invalid user ID.");
     }
     const workoutsCollection = await workouts();
-    const workouts = await workoutsCollection.find({creator: ObjectId(id)}).toArray();
-    return workouts;
+    const output = await workoutsCollection.find({creator: new ObjectId(id)}).toArray();
+    return output;
 },
 async getAll() {
     const workoutsCollection = await workouts();
-    const workouts = await workoutsCollection.find().toArray();
-    return workouts;
+    const output = await workoutsCollection.find().toArray();
+    return output;
 },
 //gets a list of workouts that match the provided name
 //empty string is a valid search term that just returns all existing workouts
 async getByName(name){
     const workoutsCollection = await workouts();
-    const workouts = await workoutsCollection.find({name: name}).toArray();
-    return workouts;
+    const output = await workoutsCollection.find({name: name}).toArray();
+    return output;
 },
 //gets a list of workouts that contain all workouts specified in list
 //exercises is a list of Ids
