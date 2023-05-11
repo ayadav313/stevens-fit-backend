@@ -53,7 +53,6 @@ const create = async(userId, workoutId, date, exerciseLogs) => {
     workoutId = isValidId(workoutId);
     date = isValidDate(date);
     exerciseLogs = isValidExerciseLog(exerciseLogs);
-    console.log("CREATE: ALL INPUTS GOOD");
   }
   catch(e){
       throw new Error('Error: workoutLogs: create: ' + e);
