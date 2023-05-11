@@ -46,36 +46,34 @@ import {ObjectId} from 'mongodb';
 // TODO: removeExercise - removes exerciseLog from the workoutLog(used for testing purposes)
 
 
-//create - initializes a workoutLog and adds it to the database
-const create = async (userId, workoutId, date) => {
-    try{
+//creates a new work out log
+const create = async(userId, workoutId, date, exerciseLogs) => {
+  try{
+    userId = isValidId(userId);
+    workoutId = isValidId(workoutId);
+    date = isValidDate(date);
+    exerciseLogs = isValidExerciseLog(exerciseLogs);
+  }
+  catch(e){
+      throw new Error('Error: workoutLogs: create: ' + e);
+  }
 
-        userId = isValidId(userId);
-        workoutId = isValidId(workoutId);
-        date = isValidDate(date);
-
-    }
-    catch(e){
-        throw new Error('Error: workoutLogs: create: ' + e);
-    }
-
-    const workoutLog = {
+  const workoutLog = {
         
-        userId: userId, // User id who performed the workout
-        workoutId: workoutId, // Workout id from Workouts collection
-        date: date,
-        exerciseLogs: []
+    userId: userId, // User id who performed the workout
+    workoutId: workoutId, // Workout id from Workouts collection
+    date: date,
+    exerciseLogs: exerciseLogs
 
-    }
+  }
 
-    const workoutLogCollection = await workoutLogs();
-    
-    const result = await workoutLogCollection.insertOne(workoutLog);
+  const workoutLogCollection = await workoutLogs();
+  const result = await workoutLogCollection.insertOne(workoutLog);
 
-    if (result.insertedCount === 0) throw new Error('workoutLogs: create: Failed to add workoutLog');
+  if (result.insertedCount === 0) throw new Error('workoutLogs: create: Failed to add workoutLog');
 
-    return workoutLogs;
-};
+  return workoutLogs;
+}
 
 //getAll - gets all logs
 const getAll = async () => {

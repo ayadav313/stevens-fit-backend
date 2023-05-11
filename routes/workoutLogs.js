@@ -38,38 +38,35 @@ import {
 const router = express.Router();
 
 
-//route to create a workoutlog - userId, workoutId, date passed through req.body
+//route to create a workoutlog - userId, workoutId, date, exerciseLogs passed through req.body
 router.post('/', async (req, res) => {
-    let { userId, workoutId, date } = req.body;
+  let { userId, workoutId, date, exerciseLogs } = req.body;
 
-    try{
+  try {
+    userId = isValidId(userId);
+    workoutId = isValidId(workoutId);
+    date = isValidDate(date);
+    exerciseLogs = isValidExerciseLog(exerciseLogs);
+  } catch (e) {
+    return res
+      .status(400)
+      .json({ error: 'Error: workoutLogs route: POST / : ' + e });
+  }
 
-        userId = isValidId(userId);
-        workoutId = isValidId(workoutId);
-        date = isValidDate(date);
+  try {
+    const log = await create(userId, workoutId, date, exerciseLogs);
 
+    if (log) {
+      return res.status(201).json(log);
+    } else {
+      throw new Error('Failed to create workout log');
     }
-    catch(e){
-        return res.status(400).json({error: 'Error: workoutLogs route: POST / : ' + e});
-    }
-
-    try{
-        const log = await create(userId, workoutId, date);
-        
-        if(log) {
-            return res.status(201).json(log);
-        }
-        else{
-            throw new Error('Failed to create user');
-        }
-
-    }
-    catch (e){
-        return res.status(500).json({error: 'Error: workoutLogs route: POST / : ' + e});
-    }
-
-});
-
+  } catch (e) {
+    return res
+      .status(500)
+      .json({ error: 'Error: workoutLogs route: POST / : ' + e });
+  }
+});  
 
 
 
