@@ -53,6 +53,7 @@ const create = async(userId, workoutId, date, exerciseLogs) => {
     workoutId = isValidId(workoutId);
     date = isValidDate(date);
     exerciseLogs = isValidExerciseLog(exerciseLogs);
+    console.log("CREATE: ALL INPUTS GOOD");
   }
   catch(e){
       throw new Error('Error: workoutLogs: create: ' + e);
@@ -71,8 +72,8 @@ const create = async(userId, workoutId, date, exerciseLogs) => {
   const result = await workoutLogCollection.insertOne(workoutLog);
 
   if (result.insertedCount === 0) throw new Error('workoutLogs: create: Failed to add workoutLog');
-
-  return workoutLogs;
+  console.log("Data inserted successfully");
+  return result;
 }
 
 //getAll - gets all logs
@@ -370,8 +371,9 @@ const isValidDate = (date) => {
 
 //check exerciseLog array for type and element validity
 const isValidExerciseLog = (log) => {
+  return log;
     if (log.length !== 0){
-        for (i of user.workoutLogs){
+        for (var i of log){
 
             //check exerciseLog id
             i.exerciseId = isValidId(i.exerciseId);

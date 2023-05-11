@@ -46,8 +46,8 @@ router.post('/', async (req, res) => {
     userId = isValidId(userId);
     workoutId = isValidId(workoutId);
     date = isValidDate(date);
-    exerciseLogs = isValidExerciseLog(exerciseLogs);
   } catch (e) {
+
     return res
       .status(400)
       .json({ error: 'Error: workoutLogs route: POST / : ' + e });
@@ -55,7 +55,6 @@ router.post('/', async (req, res) => {
 
   try {
     const log = await create(userId, workoutId, date, exerciseLogs);
-
     if (log) {
       return res.status(201).json(log);
     } else {
@@ -388,8 +387,9 @@ const isValidDate = (date) => {
 
 //check exerciseLog array for type and element validity
 const isValidExerciseLog = (log) => {
+  return log;
     if (log.length !== 0){
-        for (i of user.workoutLogs){
+        for (var i of log){
 
             //check exerciseLog id
             i.exerciseId = isValidId(i.exerciseId);
