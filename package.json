@@ -9,7 +9,8 @@
     "dev": "nodemon app.js",
     "test:mongo": "mocha ./test/config/*.test.js",
     "test:data": "mocha ./test/data/*.test.js",
-    "seed": "node tasks/seed.js"
+    "seed": "node tasks/seed.js",
+    "seed:test": "node tasks/seedTestData.js"
   },
   "keywords": [],
   "author": "",
