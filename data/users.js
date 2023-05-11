@@ -31,7 +31,11 @@ const createUser = async (username, password, email) => {
         workouts: [],
         workoutLogs: [],
         friends: [],
-        inGym: false
+        inGym: false,
+        stats: {
+          numWorkouts: 0,
+          
+        }
     };
 
     const result = await usersCollection.insertOne(newUser);
@@ -348,6 +352,10 @@ const isUser = (user) => {
         if (!validator.isMongoId(i)) return false;
       }
   }
+
+  if(!inGym) return false;
+  if(typeof inGym !== 'boolean') return false;
+
   return true;
 }
 

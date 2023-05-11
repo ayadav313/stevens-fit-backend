@@ -373,7 +373,7 @@ const isValidDate = (date) => {
 //check exerciseLog array for type and element validity
 const isValidExerciseLog = (log) => {
     if (log.length !== 0){
-        for (i of user.workoutLogs){
+        for (i of log){
 
             //check exerciseLog id
             i.exerciseId = isValidId(i.exerciseId);
