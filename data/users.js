@@ -30,7 +30,8 @@ const createUser = async (username, password, email) => {
         email: email,
         workouts: [],
         workoutLogs: [],
-        friends: []
+        friends: [],
+        inGym: false
     };
 
     const result = await usersCollection.insertOne(newUser);
@@ -171,6 +172,8 @@ const addFriend = async (id, friendId) => {
   try{
       const user = await getUserById(id);
 
+      if (user.friends.includes(friendId)) throw new Error(`friend with id of ${friendId} already exists.`);
+
       user.friends.push(friendId);
 
       //if doesn't work change to delete user.id;
@@ -183,7 +186,7 @@ const addFriend = async (id, friendId) => {
   catch(e) {
       throw new Error('Error: users: addFriend: ' + e);
   }
-}
+};
 
 
 //removeFriend - remove a friend userId from the friends array
@@ -202,6 +205,8 @@ const removeFriend = async (id, friendId) => {
   try{
       const user = await getUserById(id);
 
+      if (!user.friends.includes(friendId)) throw new Error(`user ${id} does not have friend with id of ${friendId}`);
+
       user.friends = user.friends.filter(x => x._id !== friendId);
 
       //if doesn't work change to delete user.id;
@@ -214,7 +219,7 @@ const removeFriend = async (id, friendId) => {
   catch(e) {
       throw new Error('Error: users: removeFriend: ' + e);
   }
-}
+};
 
 
 //getFriends - return array of userIds for friends of user
@@ -239,7 +244,62 @@ const getFriends = async (id) => {
   catch(e) {
       throw new Error('Error: users: getFriends: ' + e);
   }
-}
+};
+
+
+//setGymStatus - sets inGym property of user - boolean
+const setGymStatus = async (id, inGym) => {
+
+  try {
+
+      id = isValidId(id);
+      if(!inGym) throw new Error('must provide inGym param');
+      if(typeof inGym !== 'boolean') throw new Error('inGym must be of type boolean');
+
+  }
+  catch(e){
+      throw new Error('Error: users: setGymStatus: ' + e);
+  }
+
+  try{
+      const user = await getUserById(id);
+
+      //change to user.id if not working
+      delete user._id
+
+      user.inGym = inGym;
+
+      await updateUser(id, user);
+
+      return user;
+  }
+  catch(e) {
+      throw new Error('Error: users: setGymStatus: ' + e);
+  }
+};
+
+
+//setGymStatus - sets inGym property of user - boolean
+const getGymStatus = async (id) => {
+
+  try {
+
+      id = isValidId(id);
+
+  }
+  catch(e){
+      throw new Error('Error: users: getGymStatus: ' + e);
+  }
+
+  try{
+      const user = await getUserById(id);
+
+      return user.inGym;
+  }
+  catch(e) {
+      throw new Error('Error: users: getGymStatus: ' + e);
+  }
+};
 
 const getAllUsers = async () => {
   const usersCollection = await users();
@@ -288,6 +348,10 @@ const isUser = (user) => {
         if (!validator.isMongoId(i)) return false;
       }
   }
+
+  if(!inGym) return false;
+  if(typeof inGym !== 'boolean') return false;
+
   return true;
 }
 
@@ -320,5 +384,7 @@ export {
   checkUserByEmail,
   addFriend,
   getFriends,
-  removeFriend
+  removeFriend,
+  setGymStatus,
+  getGymStatus
 };
