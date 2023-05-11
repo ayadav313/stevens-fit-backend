@@ -102,7 +102,7 @@ async getByCreator(userId){
         throw new Error("Invalid user ID.");
     }
     const workoutsCollection = await workouts();
-    const output = await workoutsCollection.find({creator: new ObjectId(id)}).toArray();
+    const output = await workoutsCollection.find({creator: userId}).toArray();
     return output;
 },
 async getAll() {

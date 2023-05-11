@@ -126,7 +126,7 @@ const getByUser = async (userId) => {
 
     const Logs_collection = await workoutLogs();
 
-    const search_param = {userId: new ObjectId(userId)};
+    const search_param = {userId: userId};
 
     const log = await Logs_collection.find(search_param).toArray();
 
