@@ -31,11 +31,7 @@ const createUser = async (username, password, email) => {
         workouts: [],
         workoutLogs: [],
         friends: [],
-        inGym: false,
-        stats: {
-          numWorkouts: 0,
-          
-        }
+        inGym: false
     };
 
     const result = await usersCollection.insertOne(newUser);
